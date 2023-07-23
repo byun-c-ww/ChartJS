@@ -4,7 +4,7 @@ const TimeInterval = (data) => {
         "A1000" : 0.3,
         "A1030" : 0.5,
         "A1031" : 0.7,
-        "A1042" : 0.8,
+        "A1042" : 0.5,
     }
     const finalPrice = []
 
@@ -15,15 +15,15 @@ const TimeInterval = (data) => {
             let finish = entry['release_time']
             let device = entry['product_name']
             let year = entry['release_date']
-            let startSplit = start.split(":")
-            let finishSplit = finish.split(":")
-            let startTimeStamp = startSplit[0] * 3600 + startSplit[1] * 60 + startSplit[2]
-            let finishTimeStamp = finishSplit[0] * 3600 + finishSplit[1] * 60 + finishSplit[2]
-            let price = Math.abs(startTimeStamp-finishTimeStamp)
-            finalPrice.push([year,price*devices[device]])
+            let startSplit = start.split(":").map((e) => Number(e))
+            let finishSplit = finish.split(":").map((e) => Number(e))
+            let startTimeStamp = (startSplit[0] * 3600) + (startSplit[1] * 60) + startSplit[2]
+            let finishTimeStamp = (finishSplit[0] * 3600) + (finishSplit[1] * 60) + finishSplit[2]
+            let timeDifference = finishTimeStamp - startTimeStamp
+            finalPrice.push([year,device,timeDifference*devices[device]])
         }
+
     }
-    console.log(finalPrice)
     
     return (
         <><BarGraph price={finalPrice}></BarGraph></>

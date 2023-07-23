@@ -75,7 +75,7 @@ export default function Home() {
 				type="File"
 			/>
 			<div>
-				<button onClick={handleParse}>Parse</button>
+				<button onClick={handleParse} style={{ display: "block"}}>Parse</button>
 			</div>
 			<div style={{ marginTop: "3rem" }}>
 				{data.length > 0 && <TimeInterval data={data}>aaa</TimeInterval>}
