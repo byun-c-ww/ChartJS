@@ -1,4 +1,4 @@
-
+import BarGraph from './BarGraph'
 const TimeInterval = (data) => {
     const devices = { 
         "A1000" : 0.3,
@@ -14,20 +14,19 @@ const TimeInterval = (data) => {
             let start = entry['active_time']
             let finish = entry['release_time']
             let device = entry['product_name']
+            let year = entry['release_date']
             let startSplit = start.split(":")
             let finishSplit = finish.split(":")
             let startTimeStamp = startSplit[0] * 3600 + startSplit[1] * 60 + startSplit[2]
             let finishTimeStamp = finishSplit[0] * 3600 + finishSplit[1] * 60 + finishSplit[2]
             let price = Math.abs(startTimeStamp-finishTimeStamp)
-            console.log(price)
-            finalPrice.push(price*devices[device])
-            console.log(`times device price ${devices[device]}`)
+            finalPrice.push([year,price*devices[device]])
         }
     }
+    console.log(finalPrice)
     
     return (
-        <div>i wonder what'll happen if i put this text here!
-        </div>
+        <><BarGraph price={finalPrice}></BarGraph></>
     )
 }
 
