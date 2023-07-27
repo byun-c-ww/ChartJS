@@ -1,5 +1,9 @@
 import BarGraph from './BarGraph'
+import Filter from './Filter'
+import {useState} from 'react'
 const TimeInterval = (data) => {
+    const [filterDevice,setFilterDevice] = useState([true,true,true,true])
+
     const devices = { 
         "A1000" : 0.3,
         "A1030" : 0.5,
@@ -7,6 +11,15 @@ const TimeInterval = (data) => {
         "A1042" : 0.5,
     }
     const finalPrice = []
+
+    let deviceStates = []
+    
+    // const checkDeviceState = (removeDevice) => {
+    //     deviceStates = []
+    //     deviceStates = removeDevice
+    //     console.log(deviceStates)
+    //     return
+    // }
 
     if (Object.keys(data).length > 0) {
         for (let entry of data.data) {
@@ -24,9 +37,10 @@ const TimeInterval = (data) => {
         }
 
     }
+    console.log(filterDevice)
     
     return (
-        <><BarGraph price={finalPrice}></BarGraph></>
+        <div style={{width: "100%"}}><BarGraph price={finalPrice} filterDevice={filterDevice} onFilterDeviceChange={setFilterDevice}></BarGraph><Filter devices={devices} filterDevice={filterDevice} onFilterDeviceChange={setFilterDevice}></Filter></div>
     )
 }
 

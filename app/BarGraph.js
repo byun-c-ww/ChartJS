@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +12,8 @@ import { Bar } from 'react-chartjs-2';
 
 
 export default function BarGraph(props) {
+
+
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -21,6 +23,8 @@ export default function BarGraph(props) {
     Legend
   );
 
+  ChartJS.defaults.font.size = 16;
+
   const options = {
     responsive: true,
     plugins: {
@@ -28,12 +32,17 @@ export default function BarGraph(props) {
         position: 'top',
         labels: {
           color: "rgb(0,0,0)",
-          size: 20,
+          font: {
+            size: 20
+          }          
         },
       },
       title: {
         display: true,
-        text: 'Chart.js Bar Chart',
+        text: 'デバイス料金精算',
+        font: {
+          size: 30
+        },
         color: "rgb(0,0,0)"
       },
       labels: {
@@ -42,8 +51,9 @@ export default function BarGraph(props) {
     },
     // scales: {
     //   yAxes: {
-    //     color: "rgb(0,0,0)"
-    //   },
+    //     color: "rgb(0,0,0)",
+    //     text: "ryoukin"
+    //   }}
     //   xAxes: {
     //     color: "rgb(255,255,255)"
     //   },
@@ -87,42 +97,74 @@ export default function BarGraph(props) {
   device3 = Object.values(device3)
   device4 = Object.values(device4)
 
+  let datasets = [
+    {
+      label: 'Device 1',
+      data: labels.map((label,i) => {
+        return device1[i]}),
+      backgroundColor: 'rgba(255, 55, 55, 0.8)',
+    },
+    {
+      label: 'Device 2',
+      data: labels.map((label,i) => { 
+        return device2[i]}),
+      backgroundColor: 'rgba(53, 255, 55, 0.8)',
+    },
+    {
+      label: 'Device 3',
+      data: labels.map((label,i) => { 
+        return device3[i]}),
+      backgroundColor: 'rgba(53, 162, 235, 0.8)',
+    },
+    {
+      label: 'Device 4',
+      data: labels.map((label,i) => { 
+        return device4[i]}),
+      backgroundColor: 'rgba(255, 162, 235, 0.8)',
+    },
+  ]
+  let filterList = props.filterDevice
+  const allDevices = [
+    "Device 1",
+    "Device 2",
+    "Device 3",
+    "Device 4"
+  ]
+  const removedDevices = Array(allDevices.length).fill(0)
+  for (let i = 0; i < filterList.length; i++) {
+    let e = filterList[i]
+    if (e === true && removedDevices[i] !== 0) {
+      datasets[i] = removedDevices[i]
+      removedDevices[i] = 0
+    }
+    else if (e === false) {
+      removedDevices[i] = datasets[i]
+      console.log(removedDevices[i])
+      datasets = datasets.filter((dataset) => dataset.label !== allDevices[i])
+      console.log(datasets)
+    }
+  }
+  console.log(datasets)
+
   const data = {
     labels,
-    datasets: [
-      {
-        label: 'Device 1',
-        // data: labels.map((year) => {
-        //   prices.map((price) => {
-        //     if (year === price[0]) {
-        //       return price[1]
-        //     }
-        //   })}
-        // ),
-        // backgroundColor: 'rgba(255, 99, 132, 0.8)',
-        data: labels.map((label,i) => {
-          return device1[i]}),
-        backgroundColor: 'rgba(255, 55, 55, 0.8)',
-      },
-      {
-        label: 'Device 2',
-        data: labels.map((label,i) => { 
-          return device2[i]}),
-        backgroundColor: 'rgba(53, 255, 55, 0.8)',
-      },
-      {
-        label: 'Device 3',
-        data: labels.map((label,i) => { 
-          return device3[i]}),
-        backgroundColor: 'rgba(53, 162, 235, 0.8)',
-      },
-      {
-        label: 'Device 4',
-        data: labels.map((label,i) => { 
-          return device4[i]}),
-        backgroundColor: 'rgba(255, 162, 235, 0.8)',
-      },
-    ],
+    datasets: datasets
   };
+
+  // function addData(chart, label, newData) {
+  //   chart.data.labels.push(label);
+  //   chart.data.datasets.forEach((dataset) => {
+  //       dataset.data.push(newData);
+  //   });
+  //   chart.update();
+  // } 
+  // addData(ChartJS,labels,dataset)
+  // function removeData(chart) {
+  //     chart.data.labels.pop();
+  //     chart.data.datasets.forEach((dataset) => {
+  //         dataset.data.pop();
+  //     });
+  //     chart.update();
+  // }
   return <Bar options={options} data={data} />;
 }
